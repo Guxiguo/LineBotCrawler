@@ -16,13 +16,14 @@ def sleep_time():
 
 '''
 def load_driver(url,browser,path):
+    
     # Chrome驱动加载
     if browser == 'Chrome':
-        driver = webdriver.Chrome(path)
+        driver = webdriver.Chrome(executable_path=path)
     # Edge驱动加载
     elif browser == 'Edge':
-        driver = webdriver.Edge(path)
-    driver.maximize_window()  # 最大化界面
+        driver = webdriver.Edge(executable_path=path)
+    #driver.minimize_window()  # 最小化界面
     # 发起请求
     driver.get(url)
     return driver
@@ -39,6 +40,12 @@ def login(driver,username_xpath,password_xpath,button_xpath,username,password):
     # 提交form
     button = driver.find_element_by_xpath(button_xpath)
     button.click()
+    #driver = switch(driver)
+    time.sleep(5)
+    #print(driver.current_url)
+    check = driver.find_element_by_css_selector('p[class="mdMN06Number"]')
+    print("验证码为：",format(check.text))
+    time.sleep(15)
     return driver
 
 
@@ -82,8 +89,9 @@ def driver_chat(url,username,password,browser,driver_path):
     password_xpath = '/html/body/div/div/div/div/div/div[2]/div/form/fieldset/div[2]/input'
     button_xpath = '/html/body/div/div/div/div/div/div[2]/div/form/fieldset/div[3]/button'
     driver = login(driver,username_xpath,password_xpath,button_xpath,username,password)
-    sleep_time()
+    driver = switch(driver)
     message = '/html/body/div/div/div/aside/div/div/div/section/div[2]/div/ul/li/a'
+    sleep_time()
     driver = find_element(driver,message)
     sleep_time()
     user = '/html/body/div/div/div/section/div/div/section/div/div[2]/a/a/article/section'
